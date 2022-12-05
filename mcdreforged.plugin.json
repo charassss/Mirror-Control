@@ -1,16 +1,18 @@
 {
-    "id": "my_plugin",
-    "version": "1.0.0",
-    "name": "My Plugin",
-    "description": "This description is a description to your plugin",
-    "author": [
-        "You"
-    ],
-    "link": "https://github.com/MCDReforged/MCDReforged-PluginTemplate",
-    "dependencies": {
-    },
-
-    "resources": [
-        "lang"
-    ]
+  "id": "mirror_control",
+  "version": "1.0.0",
+  "name": "Mirror Control",
+  "description": {
+    "en_us": "A plugin to control mirror server",
+    "zh_cn": "一个控制镜像服务器的插件"
+  },
+  "author": [
+    "Chara_SS"
+  ],
+  "link": "https://github.com/charassss/Mirror-Control",
+  "dependencies": {
+  },
+  "resources": [
+    "lang"
+  ]
 }

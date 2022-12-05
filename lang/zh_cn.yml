@@ -1,0 +1,28 @@
+mc:
+  help: |-
+    !!mirror §b§l>>§f 查看此帮助信息
+    !!mirror start §e<server_name> §b§l>>§f 启动镜像服务器
+    !!mirror stop §e<server_name> §b§l>>§f 停止镜像服务器 §7(需要rcon)§f
+    !!mirror restart §e<server_name> §b§l>>§f 重启镜像服务器 §7(需要rcon)§f
+    !!mirror sync §e<server_name> §b§l>>§f 同步镜像与生存 §7(需要rcon)§f
+  server:
+    command:
+      blank_server_name: "mirror_control §l>>§r 请输入您的镜像服务器名称"
+    start:
+      starting: "mirror_control §l>>§r 镜像服务器启动中"
+      log:
+        success: "镜像服务器启动成功"
+        fail: "镜像服务器启动失败"
+    stop:
+      success: "mirror_control §l>>§r 镜像服务器关闭成功"
+      fail: "mirror_control §l>>§r 镜像服务器关闭失败"
+      log:
+        success: "镜像服务器关闭成功"
+        fail: "镜像服务器关闭失败"
+    key_error: "mirror_control §l>>§r 无效的服务器名称"
+    sync:
+      complete: "mirror_control §l>>§r 同步完成"
+      log:
+        d: "镜像服务器以删除并拷贝操作同步成功"
+        r: "镜像服务器以拷贝操作同步成功"
+        fail: "镜像服务器同步失败"
