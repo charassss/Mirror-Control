@@ -5,10 +5,10 @@ import shutil
 CONFIG = \
     {
         'permissions': {
-            'start': 1,
-            'sync': 1,
+            'start': 2,
+            'sync': 2,
             'stop': 2,
-            'restart': 1
+            'restart': 2
         },
         'this_server': {
             'world_dictionary': 'world/'
