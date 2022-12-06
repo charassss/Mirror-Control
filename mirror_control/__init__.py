@@ -1,3 +1,5 @@
+import json
+
 from mcdreforged.api.all import *
 import os
 import shutil
@@ -29,14 +31,15 @@ CONFIG = \
         }
     }
 
-DATA = {
-    'version': '1.0.0'
-}
-
 
 def on_load(server: PluginServerInterface, prev_module):
     config = server.load_config_simple(file_name='config.json', default_config=CONFIG)
-    data = server.load_config_simple(file_name='data.json', default_config=DATA)
+    try:
+        with open(server.get_data_folder()+'/data.json', encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = {}
+    # data = server.load_config_simple(file_name='data.json')
     permission = config['permissions']
     working_directory = server.get_mcdr_config()['working_directory']
     current_server_path = os.getcwd() + f'/{working_directory}'
@@ -55,10 +58,17 @@ def on_load(server: PluginServerInterface, prev_module):
             text = RTextList(
                 RText(server.tr('mc.l.head', server_list[i]['name'])).h(server.tr('mc.l.name', i)),
                 RText(server.tr('mc.l.sep')),
-                RText(server.tr('mc.l.start')).h(server.tr('mc.l.hint.start')).c(RAction.run_command, f'!!mirror start {i}'),
-                RText(server.tr('mc.l.stop')).h(server.tr('mc.l.hint.stop')).c(RAction.run_command, f'!!mirror stop {i}'),
-                RText(server.tr('mc.l.restart')).h(server.tr('mc.l.hint.restart')).c(RAction.run_command, f'!!mirror restart {i}'),
-                RText(server.tr('mc.l.sync')).h(server.tr('mc.l.hint.sync')).c(RAction.run_command, f'!!mirror sync {i}'),
+                RText(server.tr('mc.l.start')).h(server.tr('mc.l.hint.start')).c(
+                    RAction.run_command, f'!!mirror start {i}'
+                    ),
+                RText(server.tr('mc.l.stop')).h(server.tr('mc.l.hint.stop')).c(
+                    RAction.run_command, f'!!mirror stop {i}'),
+                RText(server.tr('mc.l.restart')).h(server.tr('mc.l.hint.restart')).c(
+                    RAction.run_command, f'!!mirror restart {i}'
+                    ),
+                RText(server.tr('mc.l.sync')).h(server.tr('mc.l.hint.sync')).c(
+                    RAction.run_command, f'!!mirror sync {i}'
+                    ),
                 RText(server.tr('mc.l.sep'))
             )
             source.reply(text)
@@ -75,7 +85,26 @@ def on_load(server: PluginServerInterface, prev_module):
         try:
             server_location = config['servers'][server_name]['location']
             server_startup_command = config['servers'][server_name]['command']
-            sync_server(source, ctx)
+            try:
+                if data[server_name]['running'] is True:
+                    stop_server(source, ctx)
+            except KeyError:
+                pass
+            try:
+                target_region_location = config['servers'][server_name]['target_region_location']
+                try:
+                    shutil.rmtree(target_region_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
+                                    target_region_location)
+                    server.logger.info(server.tr('mc.server.sync.log.d'))
+                except FileNotFoundError:
+                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
+                                    target_region_location)
+                    server.logger.info(server.tr('mc.server.sync.log.r'))
+                source.reply(server.tr('mc.server.sync.complete'))
+            except KeyError:
+                source.reply(server.tr('mc.server.key_error'))
+                server.logger.info(server.tr('mc.server.sync.log.fail'))
             command = f'cd {server_location} && {server_startup_command}'
             source.reply(server.tr('mc.server.start.starting'))
             os.system(command)
@@ -96,7 +125,35 @@ def on_load(server: PluginServerInterface, prev_module):
         server_name = ctx['server_name']
         try:
             if data[server_name]['running'] is True:
-                stop_server(source, ctx)
+                try:
+                    if data[server_name]['running'] is False:
+                        source.reply(server.tr('mc.server.stop.not_on'))
+                        return
+                except KeyError:
+                    source.reply(server.tr('mc.server.start.no_data'))
+                    return
+                try:
+                    if config['servers'][server_name]['rcon']['enable'] is False:
+                        source.reply(server.tr('mc.server.rcon.disable'))
+                        return
+                    rcon_port = config['servers'][server_name]['rcon']['port']
+                    rcon_password = config['servers'][server_name]['rcon']['passwd']
+                    rcon = RconConnection(address='127.0.0.1', port=rcon_port, password=rcon_password)
+                    rcon.connect()
+                    r = rcon.send_command(command='stop')
+                    print(r)
+                    if r is not None:
+                        source.reply(server.tr('mc.server.stop.success'))
+                        server.logger.info(server.tr('mc.server.stop.log.success'))
+                        data[server_name]['running'] = False
+                        server.save_config_simple(config=data, file_name='data.json')
+                        return
+                    source.reply(server.tr('mc.server.stop.fail'))
+                    server.logger.info(server.tr('mc.server.stop.log.fail'))
+
+                except KeyError:
+                    source.reply(server.tr('mc.server.key_error'))
+                    server.logger.info(server.tr('mc.server.stop.log.fail'))
         except KeyError:
             pass
         try:
@@ -118,14 +175,14 @@ def on_load(server: PluginServerInterface, prev_module):
         server_name = ctx['server_name']
         try:
             if data[server_name]['running'] is False:
-                source.reply('mc.server.stop.not_on')
+                source.reply(server.tr('mc.server.stop.not_on'))
                 return
         except KeyError:
-            source.reply('mc.server.start.no_data')
+            source.reply(server.tr('mc.server.start.no_data'))
             return
         try:
             if config['servers'][server_name]['rcon']['enable'] is False:
-                source.reply('mc.server.rcon.disable')
+                source.reply(server.tr('mc.server.rcon.disable'))
                 return
             rcon_port = config['servers'][server_name]['rcon']['port']
             rcon_password = config['servers'][server_name]['rcon']['passwd']
@@ -137,6 +194,7 @@ def on_load(server: PluginServerInterface, prev_module):
                 source.reply(server.tr('mc.server.stop.success'))
                 server.logger.info(server.tr('mc.server.stop.log.success'))
                 data[server_name]['running'] = False
+                server.save_config_simple(config=data, file_name='data.json')
                 return
             source.reply(server.tr('mc.server.stop.fail'))
             server.logger.info(server.tr('mc.server.stop.log.fail'))
@@ -150,13 +208,78 @@ def on_load(server: PluginServerInterface, prev_module):
         server_name = ctx['server_name']
         try:
             if data[server_name]['running'] is False:
-                source.reply('mc.server.stop.not_on')
+                source.reply(server.tr('mc.server.stop.not_on'))
                 return
         except KeyError:
-            source.reply('mc.server.start.no_data')
+            source.reply(server.tr('mc.server.start.no_data'))
             return
-        stop_server(source, ctx)
-        start_server(source, ctx)
+        try:
+            if data[server_name]['running'] is False:
+                source.reply(server.tr('mc.server.stop.not_on'))
+                return
+        except KeyError:
+            source.reply(server.tr('mc.server.start.no_data'))
+            return
+        try:
+            if config['servers'][server_name]['rcon']['enable'] is False:
+                source.reply(server.tr('mc.server.rcon.disable'))
+                return
+            rcon_port = config['servers'][server_name]['rcon']['port']
+            rcon_password = config['servers'][server_name]['rcon']['passwd']
+            rcon = RconConnection(address='127.0.0.1', port=rcon_port, password=rcon_password)
+            rcon.connect()
+            r = rcon.send_command(command='stop')
+            print(r)
+            if r is not None:
+                source.reply(server.tr('mc.server.stop.success'))
+                server.logger.info(server.tr('mc.server.stop.log.success'))
+                data[server_name]['running'] = False
+                server.save_config_simple(config=data, file_name='data.json')
+                return
+            source.reply(server.tr('mc.server.stop.fail'))
+            server.logger.info(server.tr('mc.server.stop.log.fail'))
+
+        except KeyError:
+            source.reply(server.tr('mc.server.key_error'))
+            server.logger.info(server.tr('mc.server.stop.log.fail'))
+        try:
+            if data[server_name]['running'] is True:
+                source.reply('mc.server.start.on')
+                return
+        except KeyError:
+            pass
+        try:
+            server_location = config['servers'][server_name]['location']
+            server_startup_command = config['servers'][server_name]['command']
+            try:
+                target_region_location = config['servers'][server_name]['target_region_location']
+                try:
+                    shutil.rmtree(target_region_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
+                                    target_region_location)
+                    server.logger.info(server.tr('mc.server.sync.log.d'))
+                except FileNotFoundError:
+                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
+                                    target_region_location)
+                    server.logger.info(server.tr('mc.server.sync.log.r'))
+                source.reply(server.tr('mc.server.sync.complete'))
+            except KeyError:
+                source.reply(server.tr('mc.server.key_error'))
+                server.logger.info(server.tr('mc.server.sync.log.fail'))
+            command = f'cd {server_location} && {server_startup_command}'
+            source.reply(server.tr('mc.server.start.starting'))
+            os.system(command)
+            server.logger.info(server.tr('mc.server.start.log.success'))
+            try:
+                data[server_name]['running'] = True
+                server.save_config_simple(config=data, file_name='data.json')
+            except KeyError:
+                data[server_name] = {}
+                data[server_name]['running'] = True
+                server.save_config_simple(config=data, file_name='data.json')
+        except KeyError:
+            source.reply(server.tr("mc.server.key_error"))
+            server.logger.info(server.tr('mc.server.start.log.fail'))
 
     server.register_command(
         Literal('!!mirror'). \

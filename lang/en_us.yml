@@ -23,7 +23,6 @@ mc:
   server:
     command:
       blank_server_name: "mirror_control §l>>§r Please input your mirror server's name"
-    no_data: "mirror_control §l>>§r No data"
     start:
       starting: "mirror_control §l>>§r Mirror server is starting!"
       log:
