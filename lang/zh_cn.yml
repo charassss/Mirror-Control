@@ -23,6 +23,7 @@ mc:
   server:
     command:
       blank_server_name: "mirror_control §l>>§r 请输入您的镜像服务器名称"
+    no_data: "mirror_control §l>>§r 未查询到相关数据"
     start:
       starting: "mirror_control §l>>§r 镜像服务器启动中"
       log:
