@@ -55,10 +55,10 @@ def on_load(server: PluginServerInterface, prev_module):
             text = RTextList(
                 RText(server.tr('mc.l.head', server_list[i]['name'])).h(server.tr('mc.l.name', i)),
                 RText(server.tr('mc.l.sep')),
-                RText(server.tr('mc.l.start')).h('mc.l.hint.start').c(RAction.run_command, f'!!mirror start {i}'),
-                RText(server.tr('mc.l.stop')).h('mc.l.hint.stop').c(RAction.run_command, f'!!mirror stop {i}'),
-                RText(server.tr('mc.l.restart')).h('mc.l.hint.restart').c(RAction.run_command, f'!!mirror restart {i}'),
-                RText(server.tr('mc.l.sync')).h('mc.l.hint.sync').c(RAction.run_command, f'!!mirror sync {i}'),
+                RText(server.tr('mc.l.start')).h(server.tr('mc.l.hint.start')).c(RAction.run_command, f'!!mirror start {i}'),
+                RText(server.tr('mc.l.stop')).h(server.tr('mc.l.hint.stop')).c(RAction.run_command, f'!!mirror stop {i}'),
+                RText(server.tr('mc.l.restart')).h(server.tr('mc.l.hint.restart')).c(RAction.run_command, f'!!mirror restart {i}'),
+                RText(server.tr('mc.l.sync')).h(server.tr('mc.l.hint.sync')).c(RAction.run_command, f'!!mirror sync {i}'),
                 RText(server.tr('mc.l.sep'))
             )
             source.reply(text)
