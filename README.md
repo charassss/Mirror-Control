@@ -1,8 +1,30 @@
-MCDReforged Plugin Template
+Mirror Control
 -----
 
-A template for MCDReforged (>=2.x) plugin
+#### Configure file structure
 
-Try `python -m mcdreforged pack` to generate the packed plugin!
+```
+config.json
+	|- permission
+	|		|- start
+	|		|- sync
+	|		|- stop
+	|		|- restart
+	|
+    |- this_server
+    |    	|- work_dictionary
+    |
+    |- server
+    		|- default
+    		|		|- name
+    		|		|- location
+    		|		|- target_region_location
+    		|		|- command
+    		|		|- rcon
+    		|			|- enable
+    		|			|- port
+    		|			|- passwd
+    		|
+    		|- ...
+```
 
-This template is under the CC0 license. Feel free to use it!

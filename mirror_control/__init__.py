@@ -8,13 +8,15 @@ CONFIG = \
             'start': 2,
             'sync': 2,
             'stop': 2,
-            'restart': 2
+            'restart': 2,
+            'list': 1
         },
         'this_server': {
             'world_dictionary': 'world/'
         },
         'servers': {
             'default': {
+                'name': None,
                 'location': '/home/server/server/[11451]mirror',
                 'target_region_location': '/home/server/server/[11451]mirror/server/world/region',
                 'command': 'screen -dmS mirror bash -c \'python -m mcdreforged\'',
@@ -31,8 +33,6 @@ DATA = {
     'version': '1.0.0'
 }
 
-prefix = '[mirror_control]'
-
 
 def on_load(server: PluginServerInterface, prev_module):
     config = server.load_config_simple(file_name='config.json', default_config=CONFIG)
@@ -46,6 +46,22 @@ def on_load(server: PluginServerInterface, prev_module):
         'en_us': 'Mirror Control help',
         'zh_cn': 'Mirror Control 插件帮助'
     })
+
+    @new_thread
+    def help_message(source):
+        server_list = config['servers']
+        source.reply(server.tr('mc.help'))
+        for i in server_list.keys():
+            text = RTextList(
+                RText(server.tr('mc.l.head', server_list[i]['name'])).h(server.tr('mc.l.name', i)),
+                RText(server.tr('mc.l.sep')),
+                RText(server.tr('mc.l.start')).h('mc.l.hint.start').c(RAction.run_command, f'!!mirror start {i}'),
+                RText(server.tr('mc.l.stop')).h('mc.l.hint.stop').c(RAction.run_command, f'!!mirror stop {i}'),
+                RText(server.tr('mc.l.restart')).h('mc.l.hint.restart').c(RAction.run_command, f'!!mirror restart {i}'),
+                RText(server.tr('mc.l.sync')).h('mc.l.hint.sync').c(RAction.run_command, f'!!mirror sync {i}'),
+                RText(server.tr('mc.l.sep'))
+            )
+            source.reply(text)
 
     @new_thread
     def start_server(source, ctx):
@@ -177,5 +193,5 @@ def on_load(server: PluginServerInterface, prev_module):
             ).
             runs(lambda src: src.reply(server.tr('mc.server.command.blank_server_name')))
         ). \
-        runs(lambda src: src.reply(server.tr('mc.help')))
+        runs(help_message)
     )

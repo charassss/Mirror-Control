@@ -1,10 +1,25 @@
 mc:
   help: |-
+    §e【Commands】§f
     !!mirror §b§l>>§f see this help message
     !!mirror start §e<server_name> §b§l>>§f start mirror server
     !!mirror stop §e<server_name>§b§l>>§f stop mirror server §7(require rcon)§f
     !!mirror restart §e<server_name> §b§l>>§f restart mirror server §7(require rcon)§f
     !!mirror sync §e<server_name> §b§l>>§f sync mirror and this server §7(require rcon)§f
+    §e【Servers】§f
+  l:
+    head: "§c§l>> §f{0}§f"
+    sep: " || "
+    name: "§7{0}§f"
+    start: "§d[▷]§f "
+    sync: "§e[☀]§f "
+    restart: "§a[☆]§f "
+    stop: "§c[×]§f "
+    hint:
+      start: "§eClick me to start this server"
+      stop: "§eClick me to stop this server"
+      restart: "§eClick me to restart this server"
+      sync: "§eClick me to sync this server"
   server:
     command:
       blank_server_name: "mirror_control §l>>§r Please input your mirror server's name"
@@ -13,12 +28,14 @@ mc:
       log:
         success: "Mirror server started successfully"
         fail: "Mirror server started in failure"
+      no_data: "mirror_control §l>>§r Mirror server: No data"
     stop:
       success: "mirror_control §l>>§r Mirror server stopped successfully"
       fail: "mirror_control §l>>§r Mirror server stopped in failure"
       log:
         success: "Mirror server stopped successfully"
         fail: "Mirror server stopped in failure"
+      not_on: "mirror_control §l>>§r Mirror server is not on"
     key_error: "mirror_control §l>>§r Invalid server name"
     sync:
       complete: "mirror_control §l>>§r Synchronization complete"
