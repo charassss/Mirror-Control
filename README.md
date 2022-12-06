@@ -1,6 +1,9 @@
 Mirror Control
 -----
 
+####  [中文版本](./README_CN.md)
+---
+
 #### Usage
 
 * `!!mirror` Help messages and quick manage

@@ -1,5 +1,7 @@
 Mirror Control
 -----
+[English version](./README.md)
+---
 
 #### 用法
 
