@@ -43,3 +43,5 @@ mc:
         d: "镜像服务器以删除并拷贝操作同步成功"
         r: "镜像服务器以拷贝操作同步成功"
         fail: "镜像服务器同步失败"
+    rcon:
+      disable: "mirror_control §l>>§r 请启用您的rcon"

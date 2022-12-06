@@ -12,7 +12,7 @@ CONFIG = \
             'list': 1
         },
         'this_server': {
-            'world_dictionary': 'world/'
+            'world_directory': 'world/'
         },
         'servers': {
             'default': {
@@ -38,9 +38,9 @@ def on_load(server: PluginServerInterface, prev_module):
     config = server.load_config_simple(file_name='config.json', default_config=CONFIG)
     data = server.load_config_simple(file_name='data.json', default_config=DATA)
     permission = config['permissions']
-    working_dictionary = server.get_mcdr_config()['working_directory']
-    current_server_path = os.getcwd() + f'/{working_dictionary}'
-    current_world_dictionary = config['this_server']['world_dictionary']
+    working_directory = server.get_mcdr_config()['working_directory']
+    current_server_path = os.getcwd() + f'/{working_directory}'
+    current_world_directory = config['this_server']['world_directory']
 
     server.register_help_message(prefix='!!mirror', message={
         'en_us': 'Mirror Control help',
@@ -103,10 +103,10 @@ def on_load(server: PluginServerInterface, prev_module):
             target_region_location = config['servers'][server_name]['target_region_location']
             try:
                 shutil.rmtree(target_region_location)
-                shutil.copytree(current_server_path + '/' + current_world_dictionary + 'region', target_region_location)
+                shutil.copytree(current_server_path + '/' + current_world_directory + 'region', target_region_location)
                 server.logger.info(server.tr('mc.server.sync.log.d'))
             except FileNotFoundError:
-                shutil.copytree(current_server_path + '/' + current_world_dictionary + 'region', target_region_location)
+                shutil.copytree(current_server_path + '/' + current_world_directory + 'region', target_region_location)
                 server.logger.info(server.tr('mc.server.sync.log.r'))
             source.reply(server.tr('mc.server.sync.complete'))
         except KeyError:
@@ -124,6 +124,9 @@ def on_load(server: PluginServerInterface, prev_module):
             source.reply('mc.server.start.no_data')
             return
         try:
+            if config['servers'][server_name]['rcon']['enable'] is False:
+                source.reply('mc.server.rcon.disable')
+                return
             rcon_port = config['servers'][server_name]['rcon']['port']
             rcon_password = config['servers'][server_name]['rcon']['passwd']
             rcon = RconConnection(address='127.0.0.1', port=rcon_port, password=rcon_password)

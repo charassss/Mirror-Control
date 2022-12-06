@@ -43,3 +43,5 @@ mc:
         d: "Mirror server synchronization successfully with delete and copy"
         r: "Mirror server synchronization successfully with copy"
         fail: "Mirror server sync in failure"
+    rcon:
+      disable: "mirror_control §l>>§r Please enable your rcon"
