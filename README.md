@@ -1,6 +1,6 @@
 ## Mirror Control
 
-## [中文版本](./README.md)
+## [中文版本](./README_CN.md)
 
 #### Usage
 
