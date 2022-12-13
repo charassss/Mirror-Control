@@ -34,7 +34,7 @@ config.json
     		|- default * (Change to whatever you want, just don't leave it as 'default'. It's ugly.) |       |
     		|		|- name * (Any server nickname you want)
     		|		|- location * (An absolute address)
-    		|		|- target_region_location * (Its region file address)
+    		|		|- target_server_location * (Its server directory location)
     		-		|- command * (Start command. Can simply be filled in with 'start.bat' or 'sh start.sh')   |
     		-		|- rcon
     		|			|- enable * (boolean true)
