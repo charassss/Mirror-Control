@@ -34,7 +34,7 @@ config.json
     		|- default * (想改成啥改成啥,就是别留个'default'.太丑了)
     		|		|- name * (任何你想要的服务器昵称)
     		|		|- location * (一个绝对地址)
-    		|		|- target_region_location * (他的region文件地址)
+    		|		|- target_server_location * (他的server文件夹地址)
     		|		|- command * (启动命令.可以简单地填入'start.bat'或者'sh start.sh')
     		|		|- rcon
     		|			|- enable * (boolean true)

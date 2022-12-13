@@ -20,7 +20,7 @@ CONFIG = \
             'default': {
                 'name': None,
                 'location': '/home/server/server/[11451]mirror',
-                'target_region_location': '/home/server/server/[11451]mirror/server/world/region',
+                'target_world_location': '/home/server/server/[11451]mirror/server/world',
                 'command': 'screen -dmS mirror bash -c \'python -m mcdreforged\'',
                 'rcon': {
                     'enable': True,
@@ -91,15 +91,15 @@ def on_load(server: PluginServerInterface, prev_module):
             except KeyError:
                 pass
             try:
-                target_region_location = config['servers'][server_name]['target_region_location']
+                target_server_location = config['servers'][server_name]['target_server_location']
                 try:
-                    shutil.rmtree(target_region_location)
-                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
-                                    target_region_location)
+                    shutil.rmtree(target_server_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory,
+                                    target_server_location)
                     server.logger.info(server.tr('mc.server.sync.log.d'))
                 except FileNotFoundError:
-                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
-                                    target_region_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory,
+                                    target_server_location)
                     server.logger.info(server.tr('mc.server.sync.log.r'))
                 source.reply(server.tr('mc.server.sync.complete'))
             except KeyError:
@@ -157,13 +157,13 @@ def on_load(server: PluginServerInterface, prev_module):
         except KeyError:
             pass
         try:
-            target_region_location = config['servers'][server_name]['target_region_location']
+            target_server_location = config['servers'][server_name]['target_server_location']
             try:
-                shutil.rmtree(target_region_location)
-                shutil.copytree(current_server_path + '/' + current_world_directory + 'region', target_region_location)
+                shutil.rmtree(target_server_location)
+                shutil.copytree(current_server_path + '/' + current_world_directory, target_server_location)
                 server.logger.info(server.tr('mc.server.sync.log.d'))
             except FileNotFoundError:
-                shutil.copytree(current_server_path + '/' + current_world_directory + 'region', target_region_location)
+                shutil.copytree(current_server_path + '/' + current_world_directory, target_server_location)
                 server.logger.info(server.tr('mc.server.sync.log.r'))
             source.reply(server.tr('mc.server.sync.complete'))
         except KeyError:
@@ -252,15 +252,15 @@ def on_load(server: PluginServerInterface, prev_module):
             server_location = config['servers'][server_name]['location']
             server_startup_command = config['servers'][server_name]['command']
             try:
-                target_region_location = config['servers'][server_name]['target_region_location']
+                target_server_location = config['servers'][server_name]['target_server_location']
                 try:
-                    shutil.rmtree(target_region_location)
-                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
-                                    target_region_location)
+                    shutil.rmtree(target_server_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory,
+                                    target_server_location)
                     server.logger.info(server.tr('mc.server.sync.log.d'))
                 except FileNotFoundError:
-                    shutil.copytree(current_server_path + '/' + current_world_directory + 'region',
-                                    target_region_location)
+                    shutil.copytree(current_server_path + '/' + current_world_directory,
+                                    target_server_location)
                     server.logger.info(server.tr('mc.server.sync.log.r'))
                 source.reply(server.tr('mc.server.sync.complete'))
             except KeyError:

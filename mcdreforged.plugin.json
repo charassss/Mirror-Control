@@ -1,6 +1,6 @@
 {
   "id": "mirror_control",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "Mirror Control",
   "description": {
     "en_us": "A plugin to control mirror server",
