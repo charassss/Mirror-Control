@@ -1,6 +1,6 @@
 {
   "id": "mirror_control",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "name": "Mirror Control",
   "description": {
     "en_us": "A plugin to control mirror server",
@@ -11,6 +11,7 @@
   ],
   "link": "https://github.com/charassss/Mirror-Control",
   "dependencies": {
+    "mcdreforged": ">=2.13.0"
   },
   "resources": [
     "lang"

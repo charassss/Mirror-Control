@@ -35,7 +35,7 @@ CONFIG = \
 def on_load(server: PluginServerInterface, prev_module):
     config = server.load_config_simple(file_name='config.json', default_config=CONFIG)
     try:
-        with open(server.get_data_folder()+'/data.json', encoding="utf-8") as f:
+        with open(server.get_data_folder() + '/data.json', encoding="utf-8") as f:
             data = json.load(f)
     except FileNotFoundError:
         data = {}
@@ -60,15 +60,15 @@ def on_load(server: PluginServerInterface, prev_module):
                 RText(server.tr('mc.l.sep')),
                 RText(server.tr('mc.l.start')).h(server.tr('mc.l.hint.start')).c(
                     RAction.run_command, f'!!mirror start {i}'
-                    ),
+                ),
                 RText(server.tr('mc.l.stop')).h(server.tr('mc.l.hint.stop')).c(
                     RAction.run_command, f'!!mirror stop {i}'),
                 RText(server.tr('mc.l.restart')).h(server.tr('mc.l.hint.restart')).c(
                     RAction.run_command, f'!!mirror restart {i}'
-                    ),
+                ),
                 RText(server.tr('mc.l.sync')).h(server.tr('mc.l.hint.sync')).c(
                     RAction.run_command, f'!!mirror sync {i}'
-                    ),
+                ),
                 RText(server.tr('mc.l.sep'))
             )
             source.reply(text)
@@ -282,7 +282,7 @@ def on_load(server: PluginServerInterface, prev_module):
             server.logger.info(server.tr('mc.server.start.log.fail'))
 
     server.register_command(
-        Literal('!!mirror'). \
+        Literal('!!mirror').
         then(
             Literal('start').
             then(
@@ -291,7 +291,7 @@ def on_load(server: PluginServerInterface, prev_module):
                 runs(start_server)
             ).
             runs(lambda src: src.reply(server.tr('mc.server.command.blank_server_name')))
-        ). \
+        ).
         then(
             Literal('sync').
             then(
@@ -300,7 +300,7 @@ def on_load(server: PluginServerInterface, prev_module):
                 runs(sync_server)
             ).
             runs(lambda src: src.reply(server.tr('mc.server.command.blank_server_name')))
-        ). \
+        ).
         then(
             Literal('stop').
             then(
@@ -309,7 +309,7 @@ def on_load(server: PluginServerInterface, prev_module):
                 runs(stop_server)
             ).
             runs(lambda src: src.reply(server.tr('mc.server.command.blank_server_name')))
-        ). \
+        ).
         then(
             Literal('restart').
             then(
@@ -318,6 +318,6 @@ def on_load(server: PluginServerInterface, prev_module):
                 runs(restart_server)
             ).
             runs(lambda src: src.reply(server.tr('mc.server.command.blank_server_name')))
-        ). \
+        ).
         runs(help_message)
     )
